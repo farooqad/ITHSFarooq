@@ -10,22 +10,24 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import se.iths.selenium.pages.TopMenu;
 
+import java.util.List;
+
 public class SeleniumHqTest {
 
     WebDriver chrome;
 
     @Before
-    public void startBrowser(){
+    public void startBrowser() {
         chrome = new ChromeDriver();
     }
 
     @After
-    public void closeBrowser(){
+    public void closeBrowser() {
         chrome.quit();
     }
 
     @Test
-    public void searchForChromeInSereachBoxAndCheckThatFirstHitIsGithub(){
+    public void searchForChromeInSereachBoxAndCheckThatFirstHitIsGithub() {
 
         chrome.get("https://www.seleniumhq.org");
         WebElement searchBox = chrome.findElement(By.id("q"));
@@ -41,18 +43,53 @@ public class SeleniumHqTest {
     }
 
     @Test
-    public void validateVersion(){
+    public void validateVersion() {
 
         chrome.get("https://www.seleniumhq.org");
-        TopMenu topMenu = new TopMenu(chrome);
-        topMenu.clickDownloadTab();
+
 
         WebElement versionText = chrome.findElement(By.xpath("//*[@id=\"mainContent\"]/p[3]/a"));
 
         Assert.assertEquals(
-                "3.141.XX",
+                "3.141.59",
                 versionText.getText()
         );
     }
 
+    @Test
+    public void validateVersion1() {
+        chrome.get("https://www.seleniumhq.org");
+
+
+        WebElement versionText = chrome.findElement(By.xpath("//*[@id=\"container\"]"));
+
+        TopMenu topMenu = new TopMenu(chrome);
+        topMenu.clickDownloadTab();
+
+        Assert.assertEquals(
+                "3.141.59",
+                versionText.getText()
+        );
+    }
+
+    @Test
+    public void validateVersion2() {
+        chrome.get("https://www.seleniumhq.org");
+
+        TopMenu topMenu = new TopMenu(chrome);
+        topMenu.clickSupportTab();
+        List<WebElement> optionCount = chrome.findElements(By.cssSelector("h2"));
+        System.out.println(optionCount.size());
+    }
+
+
+    @Test
+    public List<String> allcontributers() {
+        chrome.get("https://www.seleniumhq.org");
+
+        TopMenu topMenu = new TopMenu(chrome);
+        topMenu.clickAboutTab();
+        List<WebElement> optionCount = chrome.findElements(By.cssSelector(".Contributor>h3>a"));
+
+    }
 }

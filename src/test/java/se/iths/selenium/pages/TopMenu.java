@@ -17,5 +17,16 @@ public class TopMenu {
         WebElement downloadLink = driver.findElement(By.xpath("//*[@id=\"menu_download\"]/a"));
         downloadLink.click();
     }
+    public void clickSupportTab(){
+
+        WebElement SupportLink = driver.findElement(By.xpath("//*[@id=\"menu_support\"]/a"));
+        SupportLink.click();
+    }
+
+    public void clickAboutTab(){
+
+        WebElement AboutLink = driver.findElement(By.xpath("//*[@id=\"menu_about\"]/a"));
+        AboutLink.click();
+    }
 
 }
