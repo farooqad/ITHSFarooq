@@ -10,7 +10,9 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import se.iths.selenium.pages.TopMenu;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class SeleniumHqTest {
 
@@ -23,7 +25,7 @@ public class SeleniumHqTest {
 
     @After
     public void closeBrowser() {
-        chrome.quit();
+        //chrome.quit();
     }
 
     @Test
@@ -83,13 +85,47 @@ public class SeleniumHqTest {
     }
 
 
-    @Test
+   /* @Test
     public List<String> allcontributers() {
         chrome.get("https://www.seleniumhq.org");
 
         TopMenu topMenu = new TopMenu(chrome);
         topMenu.clickAboutTab();
         List<WebElement> optionCount = chrome.findElements(By.cssSelector(".Contributor>h3>a"));
+
+    }*/
+
+    @Test
+    public void validatesearch()
+    {
+        chrome.get("https://www.seleniumhq.org/");
+    TopMenu tp = new TopMenu(chrome);
+    tp.clickSearchBox();
+    tp.clickGoButton();
+    String lnk = tp.confirmLink();
+    Assert.assertEquals("ChromeDriver · SeleniumHQ/selenium Wiki · GitHub", lnk);
+    }
+
+
+    @Test
+    public void testAllDownloadLinks() {
+        chrome.get("https://www.seleniumhq.org/download/");
+        TopMenu tp = new TopMenu(chrome);
+        tp.clickDownloadTab();
+
+        List<WebElement> linkEelements = chrome.findElements(By.cssSelector("# mainContent> table: nth-child (29)> tbody> tr> td: nth-child (1)> a"));
+
+        List<String> allUrls = new ArrayList<>();
+        for (WebElement w : linkEelements) {
+            allUrls.add(
+                    w.getAttribute("href")
+            );
+        }
+        for (String url : allUrls) {
+            chrome.get(url);
+            Assert.assertFalse(chrome.getTitle().contains("404"));
+        }
+
 
     }
 }

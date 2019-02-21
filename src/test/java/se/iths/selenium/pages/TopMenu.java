@@ -28,5 +28,21 @@ public class TopMenu {
         WebElement AboutLink = driver.findElement(By.xpath("//*[@id=\"menu_about\"]/a"));
         AboutLink.click();
     }
+    public void clickSearchBox()
+    {
+        WebElement SearchBox = driver.findElement(By.xpath("//*[@id=\"q\"]"));
+        SearchBox.sendKeys("Chrome");
+    }
+    public void clickGoButton()
+    {
+        WebElement SearchBox = driver.findElement(By.xpath("//*[@id=\"submit\"]"));
+        SearchBox.click();
+    }
+    public String confirmLink()
+    {
+        WebElement SearchBox = driver.findElement(By.xpath("//*[@id=\"___gcse_0\"]/div/div/div/div[5]/div[2]/div/div/div[1]/div[1]/div[1]/div/a"));
+        return SearchBox.getText();
+    }
+
 
 }
