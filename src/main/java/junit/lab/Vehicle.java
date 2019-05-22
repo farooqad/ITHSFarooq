@@ -19,15 +19,34 @@ public class Vehicle {
         // First requirement
         int price = newPrice * 9 / 10;
 
-        // Second requirement
+        // age requirement
         double reduction = Math.pow(
                 (double)8/10,
                 2019 - yearOfManufacturing
         );
         price = (int)(price * reduction);
 
-        // Third requirement
+        // condition requirement
+        switch(condition){
+            case used:
+                price -= 1000;
+                break;
+            case crap:
+                price =-2000;
+                break;
+        }
 
+        //Brand requirement
+        switch(make){
+            case "Ferrari":
+                price +=2000;
+                break;
+            case "Lamborghini":
+                price +=1000;
+                break;
+        }
+        // never less than 0
+        price = price <0?0:price;
 
         // Finished
         return price;

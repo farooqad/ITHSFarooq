@@ -13,7 +13,7 @@ public class PrimeNumberLab {
             if(isPrime(i)){
                 primes.add(i);
             }
-        }
+    }
         return primes;
     }
 
