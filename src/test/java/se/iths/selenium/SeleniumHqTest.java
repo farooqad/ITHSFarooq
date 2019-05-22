@@ -9,34 +9,34 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import se.iths.selenium.pages.TopMenu;
+import se.iths.selenium.pages.webshop.DownloadPage;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class SeleniumHqTest {
 
-    WebDriver chrome;
-
+    WebDriver myBrowser;
+    TopMenu topMenu = new TopMenu(myBrowser);
     @Before
-    public void startBrowser() {
-        chrome = new ChromeDriver();
+    public void startBrowser(){
+        myBrowser = new ChromeDriver();
     }
 
     @After
-    public void closeBrowser() {
-        //chrome.quit();
+    public void closeBrowser(){
+        myBrowser.quit();
     }
 
     @Test
-    public void searchForChromeInSereachBoxAndCheckThatFirstHitIsGithub() {
+    public void chromDriverSearch(){
 
-        chrome.get("https://www.seleniumhq.org");
-        WebElement searchBox = chrome.findElement(By.id("q"));
+        myBrowser.get("https://www.seleniumhq.org");
+        WebElement searchBox = myBrowser.findElement(By.id("q"));
         searchBox.sendKeys("chrome");
         searchBox.submit();
 
-        WebElement firstSearchHit = chrome.findElement(By.xpath("//*[@id=\"___gcse_0\"]/div/div/div/div[5]/div[2]/div/div/div[1]/div[1]/div[2]/div[2]"));
+        WebElement firstSearchHit = myBrowser.findElement(By.xpath("//*[@id=\"___gcse_0\"]/div/div/div/div[5]/div[2]/div/div/div[1]/div[1]/div[2]/div[2]"));
 
         Assert.assertEquals(
                 "https://github.com/SeleniumHQ/selenium/wiki/ChromeDriver",
@@ -45,87 +45,72 @@ public class SeleniumHqTest {
     }
 
     @Test
-    public void validateVersion() {
+    public void validateVersion(){
 
-        chrome.get("https://www.seleniumhq.org");
+        myBrowser.get("https://www.seleniumhq.org");
 
-
-        WebElement versionText = chrome.findElement(By.xpath("//*[@id=\"mainContent\"]/p[3]/a"));
-
-        Assert.assertEquals(
-                "3.141.59",
-                versionText.getText()
-        );
-    }
-
-    @Test
-    public void validateVersion1() {
-        chrome.get("https://www.seleniumhq.org");
-
-
-        WebElement versionText = chrome.findElement(By.xpath("//*[@id=\"container\"]"));
-
-        TopMenu topMenu = new TopMenu(chrome);
         topMenu.clickDownloadTab();
 
+        DownloadPage dp = new DownloadPage(myBrowser);
+        Version version = dp.getVersion();
         Assert.assertEquals(
                 "3.141.59",
-                versionText.getText()
+                version.toString()
         );
     }
 
     @Test
-    public void validateVersion2() {
-        chrome.get("https://www.seleniumhq.org");
-
-        TopMenu topMenu = new TopMenu(chrome);
+    public void countNumberOfHeadings() throws InterruptedException {
         topMenu.clickSupportTab();
-        List<WebElement> optionCount = chrome.findElements(By.cssSelector("h2"));
-        System.out.println(optionCount.size());
+        Thread.sleep(30000);
+        List<WebElement> h2= myBrowser.findElements(By.tagName("<h2>"));
+        h2.size();
+        Assert.assertEquals(
+                "2",
+                h2.size()
+        );
     }
 
-
-   /* @Test
-    public List<String> allcontributers() {
-        chrome.get("https://www.seleniumhq.org");
-
-        TopMenu topMenu = new TopMenu(chrome);
-        topMenu.clickAboutTab();
-        List<WebElement> optionCount = chrome.findElements(By.cssSelector(".Contributor>h3>a"));
-
-    }*/
-
     @Test
-    public void validatesearch()
-    {
-        chrome.get("https://www.seleniumhq.org/");
-    TopMenu tp = new TopMenu(chrome);
-    tp.clickSearchBox();
-    tp.clickGoButton();
-    String lnk = tp.confirmLink();
-    Assert.assertEquals("ChromeDriver · SeleniumHQ/selenium Wiki · GitHub", lnk);
+    public void testAllLinksOnDownloadPage(){
+
+        myBrowser.get("https://www.seleniumhq.org");
+        TopMenu topMenu = new TopMenu(myBrowser);
+        topMenu.clickDownloadTab();
+
+        myBrowser.findElements(By.cssSelector("#mainContent > table:nth-child(29) > tbody > tr > td:nth-child(1) > a"))
+                .stream()
+                .map(webElement -> webElement.getAttribute("href"))
+                .collect(Collectors.toList())
+                .forEach(url -> {
+                    myBrowser.get(url);
+                    Assert.assertFalse(myBrowser.getTitle().contains("404"));
+                });
+    }
+    @Test
+    public void validateAllLinksOnThirdPartDownloads() {
+
+        myBrowser.get("https://www.seleniumhq.org");
+        TopMenu topMenu = new TopMenu(myBrowser);
+        topMenu.clickDownloadTab();
+
+        myBrowser.findElements(By.cssSelector("#mainContent > table:nth-child(29) > tbody > tr > td:nth-child(1) > a"))
+                .stream()
+                .map(webElement -> webElement.getAttribute("href"))
+                .collect(Collectors.toSet())
+                .stream()
+                .forEach(s -> {
+                    myBrowser.get(s);
+                    Assert.assertFalse(myBrowser.getTitle().contains("404"));
+                });
     }
 
-
     @Test
-    public void testAllDownloadLinks() {
-        chrome.get("https://www.seleniumhq.org/download/");
-        TopMenu tp = new TopMenu(chrome);
-        tp.clickDownloadTab();
-
-        List<WebElement> linkEelements = chrome.findElements(By.cssSelector("# mainContent> table: nth-child (29)> tbody> tr> td: nth-child (1)> a"));
-
-        List<String> allUrls = new ArrayList<>();
-        for (WebElement w : linkEelements) {
-            allUrls.add(
-                    w.getAttribute("href")
-            );
-        }
-        for (String url : allUrls) {
-            chrome.get(url);
-            Assert.assertFalse(chrome.getTitle().contains("404"));
-        }
-
-
+    public void liljeholmenToTcentral(){
+        myBrowser.get("https://sl.se/sv/");
+        myBrowser.findElement(By.xpath("//*[@id=\"travelplanner_from\"]")).sendKeys("liljeholmen");
+        myBrowser.findElement(By.xpath("//*[@id=\"travelplanner_to\"]")).sendKeys("Tcentralen (Stockholm)");
+        myBrowser.findElement(By.xpath("//*[@id=\"Travelplanner\"]/div[5]/span")).click();
+        Assert.assertFalse(myBrowser.getTitle().contains("! Time passed"));
     }
 }
