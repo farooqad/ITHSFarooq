@@ -8,27 +8,26 @@ import org.junit.Assert;
 
 public class UserPetStoreClient {
 
-    ObjectMapper mapper = new ObjectMapper();
+    ObjectMapper map = new ObjectMapper();
 
     User s = new User ();
 
-    public void createUser(User myUser){
+    public void user_Create(User myUser){
 
         try {
-            String FarooqAsJson = mapper.writeValueAsString(myUser);
+            String FarooqAsJson = map.writeValueAsString(myUser);
 
-            HttpResponse<JsonNode> postUserResponse = Unirest
+            HttpResponse<JsonNode> user_Response = Unirest
                     .post("https://swagger-petstore.azurewebsites.net/v2/user")
                     .header("Content-Type", "application/json")
                     .body(FarooqAsJson)
                     .asJson();
 
-            Assert.assertEquals(200, postUserResponse.getStatus());
+            Assert.assertEquals(200, user_Response.getStatus());
 
         } catch (Exception e){
             throw new RuntimeException(e);
         }
-
     }
 
     public User getUser(String username){
@@ -36,22 +35,18 @@ public class UserPetStoreClient {
     }
 
     public User getUser(String username, int expectedStatuscode){
-
         try {
 
-            HttpResponse<String> getUserResponse = Unirest
+            HttpResponse<String> user_Response = Unirest
                     .get("https://swagger-petstore.azurewebsites.net/v2/user/"+username)
                     .asString();
 
-            User myUser = mapper.readValue(
-                    getUserResponse.getBody(),
+            User myUser = map.readValue(
+                    user_Response.getBody(),
                     User.class
             );
-
-            Assert.assertEquals(expectedStatuscode, getUserResponse.getStatus());
-
+            Assert.assertEquals(expectedStatuscode, user_Response.getStatus());
             return myUser;
-
         } catch (Exception e){
             throw new RuntimeException(e);
         }
@@ -59,20 +54,17 @@ public class UserPetStoreClient {
 
     public boolean logIn(String username, String password) {
         try {
-
-            HttpResponse<String> postPetResponse = Unirest
+            HttpResponse<String> post_Pet_Response = Unirest
                     .get("https://swagger-petstore.azurewebsites.net/v2/user/login")
                     .header("Content-Type", "application/json")
                     .queryString("user", username)
                     .queryString("password", password)
                     .asString();
-
-            if (postPetResponse.getStatus() == 200) {
+            if (post_Pet_Response.getStatus() == 200) {
                 return true;
             } else {
                 return false;
             }
-
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -80,53 +72,43 @@ public class UserPetStoreClient {
 
     public boolean logIn1(String username, String password) {
         try {
-
-            HttpResponse<String> postPetResponse = Unirest
+            HttpResponse<String> post_Pet_Response = Unirest
                     .get("https://swagger-petstore.azurewebsites.net/v2/user/login"+username+password)
                     .header("Content-Type", "application/json")
                     .queryString("user", username)
                     .queryString("password", password)
                     .asString();
-
-            if (postPetResponse.getStatus() == 400) {
+            if (post_Pet_Response.getStatus() == 400) {
                 return true;
             } else {
                 return false;
             }
-
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    public void deleteUser(String username){
-
+    public void user_Delete(String username){
         try {
-            HttpResponse<String> deleteResponse = Unirest.delete
+            HttpResponse<String> delete_Response = Unirest.delete
                     ("https://swagger-petstore.azurewebsites.net/v2/user/" + username).asString();
 
-            Assert.assertEquals(
-                    200,
-                    deleteResponse.getStatus()
-            );
+            Assert.assertEquals(200, delete_Response.getStatus());
         } catch(Exception e){
             throw new RuntimeException(e);
         }
     }
 
     public User updateUserEmail(String username, String updatedUser) {
-
         try {
+            String FarooqAsJson = map.writeValueAsString(updatedUser);
 
-            String FurkanAsJson = mapper.writeValueAsString(updatedUser);
-
-            HttpResponse<String> updateEmail = Unirest.put
+            HttpResponse<String> email_Update = Unirest.put
                     ("https://swagger-petstore.azurewebsites.net/v2/user/" + username)
                     .header("Content-Type", "application/json")
-                    .body(FurkanAsJson)
+                    .body(FarooqAsJson)
                     .asString();
-            Assert.assertEquals(500,
-                    updateEmail.getStatus());
+            Assert.assertEquals(500, email_Update.getStatus());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
