@@ -17,9 +17,9 @@ public class RestAPIAssignment {
     UserPetStoreClient obj = new UserPetStoreClient();
 
     @Test
-    public void LoginWrightInformation() {
+    public void login() {
         try {
-            creatinguseer();
+            user_Creation();
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         } catch (UnirestException e) {
@@ -30,10 +30,10 @@ public class RestAPIAssignment {
     }
 
     @Test
-    public void LoginwithWrongPassword() throws JsonProcessingException, UnirestException {
-        UserPetStoreClient userpet = new UserPetStoreClient();
-            creatinguseeer();
-        userpet.logIn1("Farooq","Ahmad");
+    public void login_With_Wrong_Password() throws JsonProcessingException, UnirestException {
+        UserPetStoreClient user_Pet = new UserPetStoreClient();
+            user_Creation1();
+        user_Pet.logIn1("Farooq","Ahmad");
         Assert.assertEquals(false,false);
     }
 
@@ -60,12 +60,10 @@ public class RestAPIAssignment {
     }
 
     @Test
-    public void create_User() throws JsonProcessingException, UnirestException {
+    public void create_A_User() throws JsonProcessingException, UnirestException {
 
-        User Farooq = new User(9191, "Farooq", "Ahmad", "farooq@gmail.com",
-                "0909090909", "Ahmad");
-        User Farooq1 = new User(9292, "faro", "Ahmad", "farooq@gmail.com",
-                "02020202", "Ahmad");
+        User Farooq = new User(9191, "Farooq", "Ahmad", "farooq@gmail.com", "0909090909", "Ahmad");
+        User Farooq1 = new User(9292, "faro", "Ahmad", "farooq@gmail.com", "02020202", "Ahmad");
 
         String FarooqAsJson = map.writeValueAsString(Farooq);
         String FarooqAsJson2 = map.writeValueAsString(Farooq1);
@@ -92,35 +90,32 @@ public class RestAPIAssignment {
     }
 
     @Test
-    public void user_Delete() throws JsonProcessingException, UnirestException {
-        create_User();
+    public void delete_A_User() throws JsonProcessingException, UnirestException {
+        create_A_User();
         HttpResponse<String> delete_User = Unirest.delete
                 ("https://swagger-petstore.azurewebsites.net/v2/user/Farooq1")
                 .asString();
-        Assert.assertEquals(404,
-                delete_User.getStatus());
+        Assert.assertEquals(404, delete_User.getStatus());
 
         HttpResponse<String> delete_User1 = Unirest.delete
                 ("https://swagger-petstore.azurewebsites.net/v2/user/Farooq1")
                 .asString();
-        Assert.assertEquals(404,
-                delete_User1.getStatus());
+        Assert.assertEquals(404, delete_User1.getStatus());
     }
 
-    private void creatinguseer() throws JsonProcessingException, UnirestException {
-
+    private void user_Creation() throws JsonProcessingException, UnirestException {
         User Farooq = new User(9090, "Farooq", "Ahmad", "farooq@gmail.com",
                 "60606060", "Ahmad");
         String FarooqAsJson = map.writeValueAsString(Farooq);
-        HttpResponse<JsonNode> postPetResponse = Unirest
+        HttpResponse<JsonNode> post_Pet_Response = Unirest
                 .post("https://swagger-petstore.azurewebsites.net/v2/user/")
                 .header("Content-Type", "application/json")
                 .body(FarooqAsJson)
                 .asJson();
-        Assert.assertEquals(200, postPetResponse.getStatus());
+        Assert.assertEquals(200, post_Pet_Response.getStatus());
     }
 
-    private void creatinguseeer() throws JsonProcessingException, UnirestException {
+    private void user_Creation1() throws JsonProcessingException, UnirestException {
         User Farooq = new User(9090, "Farooq", "Ahmad", "Farooq@gmail.com",
                 "92929292", "amd");
         String FarooqAsJson = map.writeValueAsString(Farooq);
