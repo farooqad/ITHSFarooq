@@ -1,0 +1,12 @@
+1) Which technique did you use to choose the test cases?
+- White box Testing Technique
+
+2) What assumptions have you made? That is, what decisions have you made and why?
+For testing, I understand the functionality of the code. I have to test for specific tasks. Like Camel Case, Email or reverse. Each function has different functionality which I need to understand. I try to test each function with different Asserts. Each result gives me more understanding of the functionality of the code.
+
+
+3) Did you find any bugs? So something that you think you need to investigate before you can put the system into production.
+- No, I did not catch bugs. While I was writing test cases. I do some mistakes. But, I check the functions again. I try to investigate it and test it with more asserts with different results. 
+
+4) What was the most difficult with the lab and why was it the most difficult?
+- The difficult part was to understand the functionality of the lab. Once I understand the functionality, Then it was easy to write test cases. 
