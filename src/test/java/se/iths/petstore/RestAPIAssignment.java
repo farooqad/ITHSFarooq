@@ -2,7 +2,6 @@ package se.iths.petstore;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
@@ -11,9 +10,6 @@ import org.junit.Assert;
 import org.junit.Test;
 import se.iths.CucumberAssignment.User;
 import se.iths.CucumberAssignment.UserPetStoreClient;
-
-import java.io.IOException;
-
 
 public class RestAPIAssignment {
 
@@ -50,10 +46,10 @@ public class RestAPIAssignment {
 
     @Test
     public void email_Change() throws JsonProcessingException, UnirestException {
-        User Farooq = new User(656565, "Farooq", "Far", "amd", "farooq@gmail.com", "Ahmad");
+        user_Creation();
+        User Farooq = new User(9090, "Farooq", "Far", "amd", "amd@gmail.com", "Ahmad");
 
         String FarooqAsJson = map.writeValueAsString(Farooq);
-        Farooq.setEmail("far@gmail.com");
 
         HttpResponse<String> email_Update = Unirest.put
                 ("https://swagger-petstore.azurewebsites.net/v2/user/Farooq")
@@ -62,7 +58,7 @@ public class RestAPIAssignment {
                 .asString();
 
         Assert.assertEquals(200, email_Update.getStatus());
-        Assert.assertEquals("far@gmail.com", Farooq.getEmail());
+        Assert.assertEquals("amd@gmail.com", Farooq.getEmail());
     }
 
     @Test
@@ -119,7 +115,7 @@ public class RestAPIAssignment {
     }
 
     private void user_Creation() throws JsonProcessingException, UnirestException {
-        User Farooq = new User(9090, "Farooq", "Ahmad", "",
+        User Farooq = new User(9090, "Farooq", "Far", "Amd",
                 "farooq@gmail.com", "Ahmad");
         String FarooqAsJson = map.writeValueAsString(Farooq);
         HttpResponse<JsonNode> post_Pet_Response = Unirest
@@ -130,4 +126,3 @@ public class RestAPIAssignment {
         Assert.assertEquals(200, post_Pet_Response.getStatus());
     }
 }
-
