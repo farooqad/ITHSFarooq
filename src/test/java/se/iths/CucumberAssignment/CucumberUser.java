@@ -1,4 +1,5 @@
 package se.iths.CucumberAssignment;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mashape.unirest.http.HttpResponse;
@@ -14,21 +15,21 @@ import se.iths.CucumberAssignment.User;
 import se.iths.CucumberAssignment.UserPetStoreClient;
 
 public class CucumberUser {
-    ObjectMapper map = new ObjectMapper();
-    @Given("create a user with name {string} and id {int}")
-    public void create_a_user_with_id(String name, Integer id) throws JsonProcessingException, UnirestException {
-        User Farooq = new User(id, name, "Farooq", "Ahmad", "faroq@gmail.com", "Amd");
+        ObjectMapper map = new ObjectMapper();
+        @Given("create a user with name {string} and id {int}")
+        public void create_a_user_with_id(String name, Integer id) throws JsonProcessingException, UnirestException {
+            User Farooq = new User(id, name, "Farooq", "Ahmad", "faroq@gmail.com", "Amd");
 
 
-        String FarooqAsJson = map.writeValueAsString(Farooq);
+            String FarooqAsJson = map.writeValueAsString(Farooq);
 
-        HttpResponse<JsonNode> postPetResponse = Unirest
-                .post("https://swagger-petstore.azurewebsites.net/v2/user/")
-                .header("Content-Type", "application/json")
-                .body(FarooqAsJson)
-                .asJson();
-        Assert.assertEquals(200, postPetResponse.getStatus());
-    }
+            HttpResponse<JsonNode> postPetResponse = Unirest
+                    .post("https://swagger-petstore.azurewebsites.net/v2/user/")
+                    .header("Content-Type", "application/json")
+                    .body(FarooqAsJson)
+                    .asJson();
+            Assert.assertEquals(200, postPetResponse.getStatus());
+        }
 
     @Then("i login the user with correct user name {string} and password {string}")
     public void i_login_the_user_with_correct_user_name_and_password(String username, String pwd) {
@@ -46,23 +47,31 @@ public class CucumberUser {
         Assert.assertEquals( false, userLogin);
     }
 
-          @When("i delete the user with username {string}")
-        public void i_delete_the_user_with_username(String username) {
-            new UserPetStoreClient().user_Delete(username);
-        }
+    @When("i delete the user with username {string}")
+    public void i_delete_the_user_with_username(String username) {
+        new UserPetStoreClient().user_Delete(username); }
 
-        @Then("i get en error fetching the user with username {string}")
-        public void i_get_en_error_fetching_the_user_with_username(String username) {
-            User user = new UserPetStoreClient().getUser(username, 404);
-        }
-
-        @When("update the email of user with username {string}")
-        public void update_the_email_of_user_with_username(String username) {
-        User Farooq = new User(9090, "Farooq", "Farooq", "Ahmad", "faroq@gmail.com", "Amd");
-        Farooq.setEmail("farooq123@gmail.com");
-        new UserPetStoreClient().updateUserEmail("username","Farooq");
-        Assert.assertEquals("farooq123@gmail.com", Farooq.getEmail());
+    @Then("i get en error fetching the user with username {string}")
+    public void i_get_en_error_fetching_the_user_with_username(String username) {
+        User user = new UserPetStoreClient().getUser(username, 404);
     }
+
+    @When("update the email of user with username {string}")
+    public void update_the_email_of_user_with_username(String username) throws JsonProcessingException, UnirestException {
+        user_Creation();
+        User Farooq = new User(9090, "Farooq", "Far", "Amd",
+                "anything@gmail.com", "Ahmad");
+
+        String FarooqAsJson = map.writeValueAsString(Farooq);
+        HttpResponse<String> email_Update = Unirest.put
+                ("https://swagger-petstore.azurewebsites.net/v2/user/Farooq")
+                .header("Content-Type", "application/json")
+                .body(FarooqAsJson)
+                .asString();
+
+        Assert.assertEquals(200, email_Update.getStatus());
+        Assert.assertEquals("anything@gmail.com", Farooq.getEmail());
+        }
 
     @Then("validate the username {string} if changes has been made")
     public void validate_the_username_if_changes_has_been_made(String username) {
@@ -74,4 +83,15 @@ public class CucumberUser {
         new UserPetStoreClient().user_Delete("Farooq");
     }
 
+    private void user_Creation() throws JsonProcessingException, UnirestException {
+        User Farooq = new User(9090, "Farooq", "Far", "Amd",
+                "farooq@gmail.com", "Ahmad");
+        String FarooqAsJson = map.writeValueAsString(Farooq);
+        HttpResponse<JsonNode> post_Pet_Response = Unirest
+                .post("https://swagger-petstore.azurewebsites.net/v2/user/")
+                .header("Content-Type", "application/json")
+                .body(FarooqAsJson)
+                .asJson();
+        Assert.assertEquals(200, post_Pet_Response.getStatus());
+    }
 }
